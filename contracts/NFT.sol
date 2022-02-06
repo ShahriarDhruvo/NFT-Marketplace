@@ -15,7 +15,7 @@ contract NFT is ERC721URIStorage {
 
     // Our objectives
     // Give NFT market the ability to transact with tokens or change ownershio of a token.
-    // setApprovalForAll allows use to do this with contract address
+    // setApprovalForAll allows us to do this with contract address
 
     constructor(address marketplaceAddress) ERC721('KryptoBirdz', 'KBIRDZ') {
         contractAddress = marketplaceAddress;
