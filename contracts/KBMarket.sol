@@ -50,7 +50,7 @@ contract KBMarket is ReentrancyGuard {
         return listingPrice;
     }
 
-    function mintMarketItem(
+    function createMarketItem(
         address nftContract,
         uint256 tokenId,
         uint256 price
@@ -89,7 +89,7 @@ contract KBMarket is ReentrancyGuard {
         );
     }
 
-    function createMrketToken(address nftContract, uint256 itemId)
+    function createMarketSale(address nftContract, uint256 itemId)
         public
         payable
         nonReentrant

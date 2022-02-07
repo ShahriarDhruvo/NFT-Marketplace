@@ -12,7 +12,7 @@ module.exports = {
     version: "0.8.4",
     settings: {
       optimizer: {
-        enable: true,
+        enabled: true,
         runs: 200
       }
     }
