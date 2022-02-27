@@ -57,6 +57,7 @@ contract KBMarket is ReentrancyGuard {
     ) public payable nonReentrant {
         require(price > 0, "Price has to be at least one WEI");
         require(
+            // passing this value by the 4th parameter as an object from the frontend
             msg.value == listingPrice,
             "Price has to be equal to listing price"
         );
@@ -111,6 +112,8 @@ contract KBMarket is ReentrancyGuard {
 
         _tokensSold.increment();
 
+        // Pay the owner of the contract not the owner of the item nor the seller of the item. we are paying the owner of the this contract
+        // commision to the person who is running this marketplace
         payable(owner).transfer(listingPrice);
     }
 
@@ -162,7 +165,7 @@ contract KBMarket is ReentrancyGuard {
         return items;
     }
 
-    function fetchItemCreated() public view returns(MarketToken[] memory) {
+    function fetchItemCreated() public view returns (MarketToken[] memory) {
         uint256 totalItemCount = _tokenIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
@@ -188,4 +191,37 @@ contract KBMarket is ReentrancyGuard {
 
         return items;
     }
+
+    ///////////////////////// SED
+    struct BalanceInfo {
+        uint256 buyerBalance;
+        uint256 sellerBalance;
+        uint256 marketBalance;
+        uint256 msgBalance;
+        uint256 gasFee;
+        uint256 gasLeft;
+        address marketAddress;
+        address sellerAddress;
+        address buyerAddress;
+    }
+
+    function showBalance(address buyerAddress, uint256 itemId)
+        public
+        view
+        returns (BalanceInfo memory)
+    {
+        return
+            BalanceInfo(
+                buyerAddress.balance,
+                idToMarketItem[itemId].seller.balance,
+                address(this).balance,
+                msg.sender.balance,
+                tx.gasprice,
+                gasleft(),
+                address(this),
+                idToMarketItem[itemId].seller,
+                buyerAddress
+            );
+    }
+    ///////////////////////// SED
 }

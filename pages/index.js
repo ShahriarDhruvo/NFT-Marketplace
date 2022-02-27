@@ -17,7 +17,7 @@ export default function Home() {
     }, []);
 
     const loadNFTs = async () => {
-        const provider = new ethers.providers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider(); // very basic generic provider
         const tokenContract = new ethers.Contract(
             nftAddress,
             NFT.abi,
@@ -28,12 +28,13 @@ export default function Home() {
             KBMarket.abi,
             provider
         );
-        const data = await marketContract.fetchtMarketToken();
+        const data = await marketContract.fetchtMarketToken(); // Fetching all market NFT's
 
         const items = await Promise.all(
             data.map(async (item) => {
                 const tokenURI = tokenContract.tokenURI(item.tokenId);
-                const meta = await axios.get(tokenURI);
+                // tokenURI -> https://test-api.com/token/1
+                const meta = await axios.get(tokenURI); // Token's name, description, image/video -> jeigula ipfs e upload kora hoise
                 const price = ethers.utils.formatUnits(
                     item.price.toString(),
                     "ethers"
@@ -56,9 +57,13 @@ export default function Home() {
     };
 
     const buyNFT = async (nft) => {
+        // Connecting to metamask
         const web3modal = new Web3Modal();
         const connection = await web3modal.connect();
+        // As we need to pay by this provider we cannot use the basic JSONRPCprovider
         const provider = new ethers.providers.Web3Provider(connection);
+
+        // We will be paying by this signer
         const signer = provider.getSigner();
         const Contract = new ethers.Contract(
             nftMarketAddress,
